@@ -1,4 +1,3 @@
-import React from "react";
 import { Helmet } from "react-helmet-async";
 
 const PageSEO = ({
@@ -7,7 +6,7 @@ const PageSEO = ({
   keywords = '',
   url = '',
   image = '',
-  author = 'myApp Team',
+  author = 'Poorna',
   type = 'website',
 }) => {
   return (

@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/headerTwo";
 import axios from "axios";
+import PageSEO from "../components/pageSEO";
 
 export default function Home() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const API = process.env.REACT_APP_API_BASE_URL;
+  const currentUrl = window.location.href;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return navigate("/login");
 
     axios
-      .get("http://localhost:5000/api/users/profile", {
+      .get(`${API}/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUser(res.data))
@@ -20,14 +23,20 @@ export default function Home() {
         console.error("Failed to fetch profile:", err);
         navigate("/login");
       });
-  }, [navigate]);
+  }, [navigate, API]);
 
   if (!user) {
     return <div className="text-center mt-20">Loading profile...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white p-4 to-gray-200">
+    <div className="min-h-screen p-4 relative">
+      <PageSEO
+        title="Home | myApp"
+        description="Your profile information on myApp"
+        keywords="profile, user, myApp"
+        url={currentUrl}
+      />
       <Header />
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden md:flex">
@@ -35,7 +44,7 @@ export default function Home() {
             <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white mb-4">
               {user.profileImage ? (
                 <img
-                  src={`http://localhost:5000${user.profileImage}`}
+                  src={`${API}${user.profileImage}`}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />

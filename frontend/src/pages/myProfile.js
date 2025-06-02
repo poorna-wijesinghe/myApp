@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { Pencil } from "lucide-react";
 import Header from "../components/headerTwo";
 import axios from "axios";
+import PageSEO from "../components/pageSEO";
 
 export default function MyProfile() {
   const [activeTab, setActiveTab] = useState("Basic Details");
   const [profileData, setProfileData] = useState(null);
+  const API = process.env.REACT_APP_API_BASE_URL;
+  const currentUrl = window.location.href;
 
   const tabs = [
     "Basic Details",
@@ -19,13 +22,13 @@ export default function MyProfile() {
   const token = localStorage.getItem("token");
 
   if (token) {
-    axios.get("http://localhost:5000/api/users/profile", {
+    axios.get(`${API}/api/users/profile`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => setProfileData(res.data))
     .catch((err) => console.error("Profile fetch failed:", err));
   }
-}, []);
+}, [API]);
 
 
   const renderTabContent = () => {
@@ -42,7 +45,7 @@ export default function MyProfile() {
             <div className="flex  w-full md:w-1/4 flex-col gap-4 items-center mb-4">
               {profileData.profileImage ? (
                 <img
-                  src={`http://localhost:5000${profileData.profileImage}`}
+                  src={`${API}${profileData.profileImage}`}
                   alt="Profile"
                   className="w-20 h-20 rounded-full object-cover border"
                 />
@@ -129,7 +132,13 @@ export default function MyProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-300 p-4 relative">
+    <div className="min-h-screen p-4 relative">
+      <PageSEO
+        title="My Profile | myApp"
+        description="View your profile information on myApp"
+        keywords="profile, user, myApp"
+        url={currentUrl}
+      />
       <Header />
       <div className="flex flex-col md:flex-row gap-6 mt-4 p-4">
         {/* Side Tabs */}
@@ -138,12 +147,12 @@ export default function MyProfile() {
             const isDisabled = tab === "Spouse Details" && profileData?.maritalStatus === "Single";
             return (
               <div
-                key={tab}
+               key={tab}
                 onClick={() => !isDisabled && setActiveTab(tab)}
-                className={`cursor-pointer border-l-4 px-2 py-1 ${
-                  activeTab === tab ? "border-black font-semibold" : "border-transparent"
+                className={`cursor-pointer border-b-2 px-2 py-1 transition ${
+                    activeTab === tab ? "border-black font-semibold" : "border-gray-300"
                 } ${isDisabled ? "text-gray-400 cursor-not-allowed" : ""}`}
-              >
+                >
                 {tab}
               </div>
             );

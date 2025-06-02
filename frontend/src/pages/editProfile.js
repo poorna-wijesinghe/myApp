@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../components/headerTwo";
 import { useEffect } from "react";
 import axios from "axios";
+import PageSEO from "../components/pageSEO";
 
 
 export default function EditProfile() {
@@ -29,12 +30,15 @@ export default function EditProfile() {
     movies: "",
   });
   const [originalData, setOriginalData] = useState(null);
+  const API = process.env.REACT_APP_API_BASE_URL;
+  const currentUrl = window.location.href;
 
 // Calculate max DOB (17 years ago from today)
   const get17YearsAgo = () => {
     const today = new Date();
     today.setFullYear(today.getFullYear() - 17);
-    return today.toISOString().split("T")[0]; // format: YYYY-MM-DD
+    // format: YYYY-MM-DD
+    return today.toISOString().split("T")[0]; 
   };
   const maxDOB = get17YearsAgo();
 
@@ -42,7 +46,7 @@ export default function EditProfile() {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  axios.get("http://localhost:5000/api/users/profile", {
+  axios.get(`${API}/api/users/profile`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -54,7 +58,7 @@ export default function EditProfile() {
   .catch((error) => {
     console.error("Failed to load user data", error);
   });
-}, []);
+}, [API]);
 
 
 // Input change handler
@@ -90,7 +94,7 @@ export default function EditProfile() {
   }
 
   try {
-   await axios.put("http://localhost:5000/api/users/profile", form, {
+   await axios.put(`${API}/api/users/profile`, form, {
   headers: {
     Authorization: `Bearer ${token}`,
     "Content-Type": "multipart/form-data",
@@ -123,7 +127,7 @@ export default function EditProfile() {
                 />
                 ) : formData.profileImage ? (
                 <img
-                    src={`http://localhost:5000${formData.profileImage}`}
+                    src={`${API}${formData.profileImage}`}
                     alt="Profile"
                     className="w-20 h-20 rounded-full object-cover border"
                 />
@@ -191,7 +195,7 @@ export default function EditProfile() {
                 placeholder="Date of Birth"
                 value={formData.dob}
                 onChange={handleChange}
-                max={maxDOB} // ✅ restrict DOB to 17+ only
+                max={maxDOB}
                 className="w-full border p-2"
               />
             </div>
@@ -264,12 +268,18 @@ export default function EditProfile() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-300 p-4 relative">
+  return (    
+    <div className="min-h-screen p-4 relative">
+      <PageSEO
+        title="Edit Profile | myApp"
+        description="Update your profile information on myApp"
+        keywords="profile, user, myApp"
+        url={currentUrl}
+      />
       <Header />
       <div className="flex flex-wrap gap-6 mt-4 p-4">
         {/* Side Tabs */}
-        <div className="w-52 space-y-2 border-r pr-4">
+        <div className="w-full md:w-52 space-y-2 border-r pr-4">
          {tabs.map((tab) => {
             const isDisabled = tab === "Spouse Details" && formData.maritalStatus === "Single";
             return (

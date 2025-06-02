@@ -11,10 +11,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState(false);
   const currentUrl = window.location.href;
+  const API = process.env.REACT_APP_API_BASE_URL;
 
   const onSubmit = async (data) => {
   try {
-    const res = await axios.post("http://localhost:5000/api/users/login", {
+    const res = await axios.post(`${API}/api/users/login`, {
       userId: data.userId,
       password: data.password,
     });
@@ -37,7 +38,7 @@ const Login = () => {
 
 
   return (
-    <div className="bg-gradient-to-br from-gray-200 to-gray-400 w-full relative">
+    <div className="w-full p-4 relative">
       <PageSEO
         title="Login | myApp"
         description="Access your profile securely on myApp."

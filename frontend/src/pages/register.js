@@ -3,11 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/headerOne';
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import PageSEO from '../components/pageSEO';
 
 const Register = () => {
   const { register, handleSubmit, formState: { errors, isValid } } = useForm({ mode: 'onChange' });
   const navigate = useNavigate();
   const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const API = process.env.REACT_APP_API_BASE_URL;
+  const currentUrl = window.location.href;
+
 
   const onSubmit = async (data) => {
     if (data.password !== data.confirmPassword) {
@@ -18,7 +22,7 @@ const Register = () => {
     setPasswordMismatch(false);
 
     try {
-      await axios.post("http://localhost:5000/api/users/register", {
+      await axios.post(`${API}/api/users/register`, {
         userId: data.userId,
         password: data.password,
       });
@@ -36,7 +40,13 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-200 to-gray-400 w-full relative">
+    <div className="w-full p-4 relative">
+      <PageSEO
+        title="Register | myApp"
+        description="Register on myApp"
+        keywords="profile, user, myApp"
+        url={currentUrl}
+      />
       <Header />
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-3xl font-light mb-2 text-center">Welcome to <strong className="font-bold">myApp</strong></h1>
@@ -67,7 +77,7 @@ const Register = () => {
               className="w-full px-3 py-2 border rounded"
             />
             {errors.confirmPassword && <p className="text-red-500 text-sm">Confirm Password is required</p>}
-            {passwordMismatch && <p className="text-red-500 text-sm mt-1">Passwords do not match</p>}
+            {/* { <p className="text-red-500 text-sm mt-1">Passwords do not match</p>} */}
           </div>
 
           <button type="submit" disabled={!isValid} className="w-full bg-black text-white py-2 rounded">
@@ -78,6 +88,11 @@ const Register = () => {
             Already have an account? <Link to="/login" className="underline">Login here</Link>
           </p>
         </form>
+        {passwordMismatch && (
+        <div className="relative top-2 bg-gray-800 text-white px-4 py-2 rounded text-sm">
+          Passwords do not match
+        </div>
+      )}
       </div>
     </div>
   );
