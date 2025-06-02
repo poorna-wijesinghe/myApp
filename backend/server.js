@@ -9,10 +9,12 @@ const userRoutes = require('./routes/userRoutes');
 dotenv.config();
 
 const app = express();
+
 app.use(cors({
-  origin: ["https://perfect-victory-production.up.railway.app/"], // ← add your real frontend domain
-  credentials: true,
+  origin: ['http://localhost:3000', 'https://myapp-backend.up.railway.app'],
+  credentials: true
 }));
+
 app.use(express.json());
 
 // Serve static files from "uploads" directory
