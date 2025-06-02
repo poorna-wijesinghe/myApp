@@ -142,7 +142,7 @@ export default function MyProfile() {
       <Header />
       <div className="flex flex-col md:flex-row gap-6 mt-4 p-4">
         {/* Side Tabs */}
-        <div className="w-52 space-y-2 md:border-r md:pr-4">
+        <div className="w-full md:w-52 space-y-2 md:border-r md:pr-4">
          {tabs.map((tab) => {
             const isDisabled = tab === "Spouse Details" && profileData?.maritalStatus === "Single";
             return (
