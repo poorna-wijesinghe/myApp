@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: ["http://localhost:3000", "https://usermyapp.netlify.app"], // ← add your real frontend domain
+  origin: ["https://perfect-victory-production.up.railway.app/"], // ← add your real frontend domain
   credentials: true,
 }));
 app.use(express.json());
